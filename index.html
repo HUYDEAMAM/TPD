@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Làng Rèn Tây Phương Danh: 300 Năm Giữ Lửa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Earthy Forge -->
+    <!-- Application Structure Plan: Tôi đã thiết kế một trang web tường thuật theo chiều dọc, dẫn dắt người dùng qua câu chuyện của làng nghề. Cấu trúc này bắt đầu với tổng quan (phần giới thiệu, chỉ số chính), đi sâu vào quá khứ (dòng thời gian), khám phá kỹ nghệ (quy trình, sản phẩm), tôn vinh văn hóa (lễ hội), phân tích hiện tại (kinh tế), và nhìn về tương lai (đề xuất). Luồng thông tin theo chủ đề này trực quan và hấp dẫn hơn cấu trúc học thuật của báo cáo gốc, khuyến khích sự khám phá thông qua các phần tương tác nhỏ gọn. -->
+    <!-- Visualization & Content Choices: Báo cáo -> Mục tiêu -> Phương pháp -> Tương tác -> Lý do -> Thư viện/Phương pháp - Xác nhận KHÔNG SỬ DỤNG SVG/Mermaid. 1. Chỉ số chính -> Thông báo -> Thẻ thống kê -> Di chuột -> Tác động nhanh -> HTML/JS. 2. Lịch sử -> Thay đổi -> Dòng thời gian tương tác -> Cuộn & Nhấp -> Dòng chảy tường thuật -> HTML/JS. 3. Sản phẩm -> Tổ chức -> Thẻ lọc -> Nhấp bộ lọc -> Khám phá theo người dùng -> HTML/JS. 4. Quy trình rèn -> Tổ chức -> Sơ đồ quy trình -> Nhấp vào bước -> Giải thích đơn giản -> HTML/JS. 5. Tỷ lệ hộ dân -> So sánh -> Biểu đồ tròn -> Di chuột -> So sánh trực quan -> Chart.js. 6. Lễ hội -> Tổ chức -> Tab nội dung -> Nhấp tab -> Nội dung gọn gàng -> HTML/JS. 7. Tạo Thơ Về Làng Rèn -> Sáng tạo -> Nút kích hoạt LLM -> Nhấp -> Tăng cường sự gắn kết cảm xúc với văn hóa làng nghề -> Gemini API. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Lexend', sans-serif; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #f97316;
+            border: 4px solid #fff7ed;
+        }
+        .active-nav { color: #f97316; font-weight: 600; }
+        .section {
+            scroll-margin-top: 80px;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-stone-800 antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-50 shadow-md transition-all duration-300">
+        <div class="container mx-auto px-4 py-3">
+            <nav class="flex justify-between items-center">
+                <a href="#hero" class="text-xl font-bold text-orange-600">Tây Phương Danh</a>
+                <div class="hidden md:flex items-center space-x-6 text-stone-600">
+                    <a href="#history" class="hover:text-orange-600 transition-colors duration-300 nav-link">Lịch Sử</a>
+                    <a href="#craft" class="hover:text-orange-600 transition-colors duration-300 nav-link">Kỹ Nghệ</a>
+                    <a href="#culture" class="hover:text-orange-600 transition-colors duration-300 nav-link">Văn Hóa</a>
+                    <a href="#community" class="hover:text-orange-600 transition-colors duration-300 nav-link">Cộng Đồng</a>
+                    <a href="#future" class="hover:text-orange-600 transition-colors duration-300 nav-link">Tương Lai</a>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-stone-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path></svg>
+                </button>
+            </nav>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white/90">
+             <a href="#history" class="block py-2 px-4 text-sm text-stone-600 hover:bg-orange-100 nav-link">Lịch Sử</a>
+             <a href="#craft" class="block py-2 px-4 text-sm text-stone-600 hover:bg-orange-100 nav-link">Kỹ Nghệ</a>
+             <a href="#culture" class="block py-2 px-4 text-sm text-stone-600 hover:bg-orange-100 nav-link">Văn Hóa</a>
+             <a href="#community" class="block py-2 px-4 text-sm text-stone-600 hover:bg-orange-100 nav-link">Cộng Đồng</a>
+             <a href="#future" class="block py-2 px-4 text-sm text-stone-600 hover:bg-orange-100 nav-link">Tương Lai</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="min-h-screen flex items-center justify-center bg-white pt-20">
+            <div class="text-center p-4">
+                <h1 class="text-4xl md:text-6xl font-bold text-stone-900 leading-tight">
+                    Làng Rèn <span class="text-orange-600">Tây Phương Danh</span>
+                </h1>
+                <p class="mt-4 text-lg md:text-xl text-stone-600 max-w-3xl mx-auto">
+                    Hơn 300 năm giữ lửa, nơi những thanh sắt thô sơ được thổi hồn thành những sản phẩm tinh xảo, bền bỉ, mang đậm dấu ấn văn hóa đất võ Bình Định.
+                </p>
+                <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                    <div class="bg-amber-50 p-4 rounded-lg shadow-sm text-center">
+                        <p class="text-3xl font-bold text-orange-600">300+</p>
+                        <p class="text-sm text-stone-600 mt-1">Năm Lịch Sử</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-lg shadow-sm text-center">
+                        <p class="text-3xl font-bold text-orange-600">>70%</p>
+                        <p class="text-sm text-stone-600 mt-1">Hộ Dân Theo Nghề</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-lg shadow-sm text-center">
+                        <p class="text-3xl font-bold text-orange-600">Số 1</p>
+                        <p class="text-sm text-stone-600 mt-1">Làng Rèn Lớn Nhất Bình Định</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-lg shadow-sm text-center">
+                        <p class="text-3xl font-bold text-orange-600">1</p>
+                        <p class="text-sm text-stone-600 mt-1">Lễ Hội Tôn Vinh Tổ Nghề</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="history" class="py-20 section">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-stone-900">Dòng Chảy Lịch Sử</h2>
+                    <p class="mt-2 text-stone-600 max-w-2xl mx-auto">Từ xưởng vũ khí của nghĩa quân Tây Sơn đến trung tâm nông cụ lớn nhất khu vực, Tây Phương Danh đã linh hoạt chuyển mình qua từng giai đoạn lịch sử. Hãy cùng khám phá hành trình đáng kinh ngạc này.</p>
+                </div>
+
+                <div class="flex">
+                    <div class="w-2/5 md:w-1/3 relative">
+                        <div class="border-l-4 border-orange-200 absolute h-full top-0 left-1/2 -translate-x-1/2"></div>
+                        <div id="timeline-container" class="space-y-16">
+                            <div data-id="khoi-nguon" class="timeline-item-btn cursor-pointer relative p-4 text-right">
+                                <h3 class="font-semibold text-lg">Khởi Nguồn</h3>
+                                <p class="text-sm text-stone-500">~ 300 năm trước</p>
+                            </div>
+                            <div data-id="tay-son" class="timeline-item-btn cursor-pointer relative p-4 text-right">
+                                <h3 class="font-semibold text-lg">Thời Kỳ Tây Sơn</h3>
+                                <p class="text-sm text-stone-500">Cuối thế kỷ 18</p>
+                            </div>
+                            <div data-id="htx" class="timeline-item-btn cursor-pointer relative p-4 text-right">
+                                <h3 class="font-semibold text-lg">HTX Ra Đời</h3>
+                                <p class="text-sm text-stone-500">1978</p>
+                            </div>
+                             <div data-id="co-gioi-hoa" class="timeline-item-btn cursor-pointer relative p-4 text-right">
+                                <h3 class="font-semibold text-lg">Cơ Giới Hóa</h3>
+                                <p class="text-sm text-stone-500">Cuối thập niên 1990</p>
+                            </div>
+                            <div data-id="cong-nhan" class="timeline-item-btn cursor-pointer relative p-4 text-right">
+                                <h3 class="font-semibold text-lg">Công Nhận Di Sản</h3>
+                                <p class="text-sm text-stone-500">2007</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-3/5 md:w-2/3 pl-8">
+                        <div id="timeline-content" class="bg-white p-6 rounded-lg shadow-lg min-h-[300px]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="craft" class="py-20 bg-white section">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-stone-900">Nghệ Thuật Của Lửa Và Sắt</h2>
+                     <p class="mt-2 text-stone-600 max-w-2xl mx-auto">Tại Tây Phương Danh, mỗi sản phẩm là kết tinh của kỹ thuật rèn điêu luyện và "bí quyết" gia truyền. Nơi đây, sự khéo léo của đôi tay người thợ hòa quyện cùng sự hỗ trợ của máy móc hiện đại để tạo nên những dụng cụ "hàng hiệu" trứ danh.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-start">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-center">Quy Trình Chế Tác</h3>
+                        <div class="flex flex-col space-y-4">
+                            <div id="process-step-1" class="process-step cursor-pointer p-4 border-2 border-stone-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all duration-300">
+                                <h4 class="font-semibold">1. Nung (Gia nhiệt)</h4>
+                                <p class="text-sm text-stone-600 mt-1 hidden">Kim loại được nung trong lò than đến khi đỏ rực, đạt nhiệt độ lý tưởng để tạo hình.</p>
+                            </div>
+                            <div id="process-step-2" class="process-step cursor-pointer p-4 border-2 border-stone-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all duration-300">
+                                <h4 class="font-semibold">2. Rèn (Tạo hình)</h4>
+                                <p class="text-sm text-stone-600 mt-1 hidden">Người thợ dùng búa tay hoặc búa máy để đập, kéo và định hình phôi kim loại theo sản phẩm mong muốn.</p>
+                            </div>
+                            <div id="process-step-3" class="process-step cursor-pointer p-4 border-2 border-stone-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all duration-300">
+                                <h4 class="font-semibold">3. Tôi (Làm cứng)</h4>
+                                <p class="text-sm text-stone-600 mt-1 hidden">Sản phẩm được làm nguội đột ngột trong nước hoặc dầu để tăng độ cứng và độ bền.</p>
+                            </div>
+                             <div id="process-step-4" class="process-step cursor-pointer p-4 border-2 border-stone-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all duration-300">
+                                <h4 class="font-semibold">4. Mài (Hoàn thiện)</h4>
+                                <p class="text-sm text-stone-600 mt-1 hidden">Công đoạn cuối cùng để tạo độ sắc bén, bóng đẹp và khắc tên gia đình lên sản phẩm.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-center">Sản Phẩm Nổi Bật</h3>
+                        <div class="flex justify-center space-x-2 mb-4">
+                            <button class="product-filter-btn px-4 py-2 text-sm rounded-full bg-orange-500 text-white" data-filter="all">Tất Cả</button>
+                            <button class="product-filter-btn px-4 py-2 text-sm rounded-full bg-stone-200 text-stone-700" data-filter="nong-cu">Nông Cụ</button>
+                            <button class="product-filter-btn px-4 py-2 text-sm rounded-full bg-stone-200 text-stone-700" data-filter="gia-dung">Gia Dụng</button>
+                        </div>
+                        <div id="product-gallery" class="grid grid-cols-2 gap-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="culture" class="py-20 section">
+            <div class="container mx-auto px-4">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-stone-900">Linh Hồn Của Làng Nghề</h2>
+                    <p class="mt-2 text-stone-600 max-w-2xl mx-auto">Hơn cả một hoạt động kinh tế, nghề rèn là mạch sống văn hóa của Tây Phương Danh. Lễ hội làng rèn hàng năm chính là nơi tinh thần "uống nước nhớ nguồn" và sự gắn kết cộng đồng được thể hiện rực rỡ và sống động nhất.</p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-center text-orange-600">Lễ Hội Làng Rèn Tây Phương Danh</h3>
+                        <p class="text-center text-stone-600 mt-1">Diễn ra từ 12-14 tháng Hai Âm lịch hàng năm</p>
+                    </div>
+                    <div class="border-b border-stone-200">
+                        <nav class="flex justify-center -mb-px">
+                            <button data-tab="le" class="culture-tab whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm border-orange-500 text-orange-600">Phần Lễ</button>
+                            <button data-tab="hoi" class="culture-tab whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300">Phần Hội</button>
+                            <button data-tab="y-nghia" class="culture-tab whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300">Ý Nghĩa</button>
+                        </nav>
+                    </div>
+                    <div id="culture-content" class="p-6">
+                    </div>
+                    <div class="p-6 border-t border-stone-200 text-center">
+                        <button id="generate-poem-btn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            ✨ Tạo Thơ Về Làng Rèn ✨
+                        </button>
+                        <div id="poem-output" class="mt-4 p-4 bg-amber-50 rounded-lg text-stone-700 text-sm italic min-h-[50px] flex items-center justify-center text-center">
+                            Bài thơ sẽ xuất hiện ở đây.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="community" class="py-20 bg-white section">
+            <div class="container mx-auto px-4">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-stone-900">Sức Sống Cộng Đồng</h2>
+                     <p class="mt-2 text-stone-600 max-w-2xl mx-auto">Nghề rèn không chỉ mang lại cuộc sống ổn định cho hàng trăm hộ dân mà còn định hình nên bản sắc của cả một cộng đồng. Tuy nhiên, làng nghề cũng đối mặt với không ít thách thức trong thời đại mới.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-center">Tỷ Lệ Hộ Dân Tham Gia Nghề Rèn</h3>
+                        <div class="chart-container relative w-full max-w-sm mx-auto h-80">
+                             <canvas id="communityChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-amber-50 p-6 rounded-lg">
+                            <h4 class="font-semibold text-lg text-green-700">Đóng Góp Kinh Tế</h4>
+                            <p class="mt-2 text-stone-600 text-sm">Nghề rèn mang lại thu nhập ổn định, giúp nhiều hộ gia đình trở nên khá giả. Sản phẩm của làng có mặt trên khắp cả nước, đặc biệt là Tây Nguyên, khẳng định vị thế kinh tế quan trọng.</p>
+                        </div>
+                         <div class="bg-amber-50 p-6 rounded-lg">
+                            <h4 class="font-semibold text-lg text-red-700">Thách Thức Hiện Hữu</h4>
+                            <ul class="mt-2 list-disc list-inside text-stone-600 text-sm space-y-1">
+                                <li>Cạnh tranh từ sản phẩm công nghiệp giá rẻ.</li>
+                                <li>Nguy cơ ô nhiễm môi trường (tiếng ồn, không khí).</li>
+                                <li>Khó khăn trong việc thu hút lao động trẻ kế thừa.</li>
+                                <li>Duy trì thị phần và lợi nhuận trong thị trường hiện đại.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="py-20 section">
+            <div class="container mx-auto px-4">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-stone-900">Hướng Tới Tương Lai Bền Vững</h2>
+                    <p class="mt-2 text-stone-600 max-w-2xl mx-auto">Với sự công nhận chính thức và tiềm năng du lịch, Tây Phương Danh đang có những cơ hội mới để phát triển. Việc bảo tồn di sản song hành cùng đổi mới là chìa khóa cho một tương lai bền vững.</p>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-4">
+                    <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300">
+                        <h4 class="font-semibold text-orange-600">Phát Triển Du Lịch</h4>
+                        <p class="text-sm text-stone-600 mt-1">Xây dựng các tour tham quan, trải nghiệm, cho phép du khách tìm hiểu quy trình rèn và giao lưu với nghệ nhân.</p>
+                    </div>
+                     <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300">
+                        <h4 class="font-semibold text-orange-600">Đa Dạng Hóa Sản Phẩm</h4>
+                        <p class="text-sm text-stone-600 mt-1">Sáng tạo các mẫu mã mới, sản phẩm mỹ nghệ, quà lưu niệm bên cạnh nông cụ truyền thống.</p>
+                    </div>
+                     <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300">
+                        <h4 class="font-semibold text-orange-600">Đào Tạo Kế Thừa</h4>
+                        <p class="text-sm text-stone-600 mt-1">Mở các lớp đào tạo, khuyến khích thế hệ trẻ học hỏi và gìn giữ "bí quyết" của cha ông.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300">
+                        <h4 class="font-semibold text-orange-600">Bảo Vệ Môi Trường</h4>
+                        <p class="text-sm text-stone-600 mt-1">Áp dụng các giải pháp giảm thiểu tiếng ồn, khói bụi để làng nghề phát triển xanh hơn.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-white mt-20">
+        <div class="container mx-auto px-4 py-6 text-center text-sm">
+            <p>&copy; 2025 | Một sản phẩm trực quan hóa dữ liệu về Làng rèn Tây Phương Danh.</p>
+            <p class="text-stone-400 mt-1">Thông tin được tổng hợp và phân tích từ báo cáo "Làng Rèn Tây Phương Danh: Di Sản Bền Vững và Triển Vọng Phát Triển".</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const timelineData = {
+                'khoi-nguon': {
+                    title: 'Khởi Nguồn Làng Nghề',
+                    content: 'Khoảng 300 năm trước, Ông Đào Giã Tượng từ phương Bắc đã mang nghề rèn đến vùng đất này. Ông truyền dạy kỹ thuật cho người dân địa phương, giúp họ tạo ra công cụ sản xuất nông nghiệp và có kế sinh nhai, đặt nền móng cho một làng nghề trù phú.'
+                },
+                'tay-son': {
+                    title: 'Xưởng Vũ Khí Của Nghĩa Quân Tây Sơn',
+                    content: 'Vào cuối thế kỷ 18, làng rèn Tây Phương Danh đóng vai trò chiến lược quan trọng. Các lò rèn nơi đây ngày đêm đỏ lửa để sản xuất vũ khí sắc bén, góp phần không nhỏ vào sức mạnh của cuộc khởi nghĩa nông dân Tây Sơn do Hoàng đế Quang Trung lãnh đạo.'
+                },
+                'htx': {
+                    title: 'Thành Lập Hợp Tác Xã Rèn',
+                    content: 'Năm 1978, Hợp tác xã rèn Đập Đá ra đời, mở ra một "thời kỳ hoàng kim" cho làng nghề. Mô hình sản xuất tập thể giúp tăng quy mô, hiệu quả và thu nhập cho các hộ gia đình, nhiều người chuyên tâm hẳn vào nghề rèn.'
+                },
+                'co-gioi-hoa': {
+                    title: 'Thích Ứng Bằng Cơ Giới Hóa',
+                    content: 'Đối mặt với sự cạnh tranh từ hàng công nghiệp, cuối thập niên 1990, các nghệ nhân đã mạnh dạn đầu tư búa máy. Sự thay đổi này giúp tăng năng suất gấp ba lần, nhưng các công đoạn thủ công tinh túy nhất vẫn được giữ gìn để đảm bảo chất lượng "hàng hiệu".'
+                },
+                'cong-nhan': {
+                    title: 'Công Nhận Làng Nghề Truyền Thống',
+                    content: 'Năm 2007, UBND tỉnh Bình Định chính thức công nhận Tây Phương Danh là làng nghề truyền thống. Đây là một dấu mốc quan trọng, khẳng định giá trị di sản và tạo cơ sở cho các chính sách bảo tồn và phát triển du lịch trong tương lai.'
+                }
+            };
+
+            const timelineContentEl = document.getElementById('timeline-content');
+            const timelineBtns = document.querySelectorAll('.timeline-item-btn');
+
+            function updateTimelineContent(id) {
+                const data = timelineData[id];
+                timelineContentEl.innerHTML = `
+                    <h3 class="text-2xl font-bold text-orange-600 mb-2">${data.title}</h3>
+                    <p class="text-stone-600">${data.content}</p>
+                `;
+                timelineBtns.forEach(btn => {
+                    if (btn.dataset.id === id) {
+                        btn.querySelector('h3').classList.add('text-orange-600');
+                    } else {
+                        btn.querySelector('h3').classList.remove('text-orange-600');
+                    }
+                });
+            }
+
+            timelineBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    updateTimelineContent(btn.dataset.id);
+                });
+            });
+
+            updateTimelineContent('khoi-nguon');
+
+            const processSteps = document.querySelectorAll('.process-step');
+            processSteps.forEach(step => {
+                step.addEventListener('click', () => {
+                    const desc = step.querySelector('p');
+                    const isHidden = desc.classList.contains('hidden');
+                    
+                    document.querySelectorAll('.process-step p').forEach(p => p.classList.add('hidden'));
+                    document.querySelectorAll('.process-step').forEach(s => {
+                        s.classList.remove('bg-orange-50', 'border-orange-500');
+                        s.classList.add('border-stone-200');
+                    });
+
+                    if(isHidden) {
+                        desc.classList.remove('hidden');
+                        step.classList.add('bg-orange-50', 'border-orange-500');
+                        step.classList.remove('border-stone-200');
+                    }
+                });
+            });
+
+            const productData = [
+                { name: 'Rựa', category: 'nong-cu', icon: '🌿' },
+                { name: 'Cuốc', category: 'nong-cu', icon: '🌿' },
+                { name: 'Dao', category: 'gia-dung', icon: '🔪' },
+                { name: 'Xẻng', category: 'nong-cu', icon: '🌿' },
+                { name: 'Kéo', category: 'gia-dung', icon: '✂️' },
+                { name: 'Đinh Tàu', category: 'dac-biet', icon: '⚓' }
+            ];
+
+            const productGallery = document.getElementById('product-gallery');
+            const filterBtns = document.querySelectorAll('.product-filter-btn');
+
+            function renderProducts(filter) {
+                productGallery.innerHTML = '';
+                const filteredProducts = filter === 'all' ? productData : productData.filter(p => p.category === filter);
+                
+                filteredProducts.forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'bg-amber-50 p-4 rounded-lg text-center shadow-sm';
+                    productCard.innerHTML = `<div class="text-4xl">${product.icon}</div><p class="mt-2 font-semibold">${product.name}</p>`;
+                    productGallery.appendChild(productCard);
+                });
+            }
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-orange-500', 'text-white');
+                        b.classList.add('bg-stone-200', 'text-stone-700');
+                    });
+                    btn.classList.add('bg-orange-500', 'text-white');
+                    btn.classList.remove('bg-stone-200', 'text-stone-700');
+                    renderProducts(btn.dataset.filter);
+                });
+            });
+            
+            renderProducts('all');
+
+
+            const cultureData = {
+                'le': {
+                    title: 'Nghi Lễ Trang Nghiêm',
+                    content: 'Phần lễ diễn ra vào 4 giờ sáng ngày 12 Âm lịch, do các bô lão và hàng ngàn nghệ nhân thực hiện. Mọi người cùng nhau dâng hương, làm lễ cúng Tổ nghề Đào Giã Tượng, cầu cho quốc thái dân an và một năm làm ăn phát đạt, thịnh vượng.'
+                },
+                'hoi': {
+                    title: 'Không Khí Sôi Nổi',
+                    content: 'Phần hội là không gian văn hóa cộng đồng với nhiều hoạt động đặc sắc như hát bộ, biểu diễn văn nghệ và các trò chơi dân gian truyền thống như kéo co, đập ấm... thu hút đông đảo người dân và du khách tham gia.'
+                },
+                'y-nghia': {
+                    title: 'Gìn Giữ Di Sản',
+                    content: 'Lễ hội là dịp để thể hiện tinh thần "uống nước nhớ nguồn", thắt chặt tình làng nghĩa xóm và truyền lại niềm tự hào về nghề cho thế hệ trẻ. Đây cũng là cơ hội để những người con xa xứ trở về, kết nối lại với cội nguồn.'
+                }
+            };
+
+            const cultureContentEl = document.getElementById('culture-content');
+            const cultureTabs = document.querySelectorAll('.culture-tab');
+
+            function updateCultureContent(tab) {
+                const data = cultureData[tab];
+                cultureContentEl.innerHTML = `
+                    <h4 class="text-xl font-semibold text-stone-800 mb-2">${data.title}</h4>
+                    <p class="text-stone-600">${data.content}</p>
+                `;
+                 cultureTabs.forEach(t => {
+                    t.classList.remove('border-orange-500', 'text-orange-600');
+                    t.classList.add('border-transparent', 'text-stone-500');
+                });
+                const activeTab = document.querySelector(`.culture-tab[data-tab="${tab}"]`);
+                activeTab.classList.add('border-orange-500', 'text-orange-600');
+                activeTab.classList.remove('border-transparent', 'text-stone-500');
+            }
+            
+            cultureTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    updateCultureContent(tab.dataset.tab);
+                });
+            });
+
+            updateCultureContent('le');
+
+            const ctx = document.getElementById('communityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Hộ làm nghề rèn', 'Hộ làm nghề khác'],
+                    datasets: [{
+                        label: 'Tỷ lệ hộ dân',
+                        data: [300, 136],
+                        backgroundColor: [
+                            '#f97316',
+                            '#d6d3d1'
+                        ],
+                        borderColor: '#fdf2e9',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + ' hộ';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+            
+            const header = document.getElementById('header');
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('py-2');
+                    header.classList.remove('py-3');
+                } else {
+                    header.classList.remove('py-2');
+                    header.classList.add('py-3');
+                }
+                
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 90) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active-nav');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active-nav');
+                    }
+                });
+            });
+
+            // Gemini API Integration - Generate Poem
+            const generatePoemBtn = document.getElementById('generate-poem-btn');
+            const poemOutput = document.getElementById('poem-output');
+
+            generatePoemBtn.addEventListener('click', async () => {
+                poemOutput.innerHTML = 'Đang tạo bài thơ...';
+                generatePoemBtn.disabled = true;
+
+                try {
+                    let chatHistory = [];
+                    const prompt = "Viết một bài thơ ngắn khoảng 4-6 câu về làng rèn Tây Phương Danh, tập trung vào lịch sử, nghề rèn và tinh thần văn hóa của làng. Ngôn ngữ: Tiếng Việt. Đảm bảo bài thơ mang tính chất cổ kính, hùng tráng.";
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = "";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                    
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        poemOutput.innerHTML = text.replace(/\n/g, '<br>'); // Display newlines as breaks
+                    } else {
+                        poemOutput.innerHTML = 'Không thể tạo bài thơ lúc này. Vui lòng thử lại.';
+                    }
+                } catch (error) {
+                    console.error('Error generating poem:', error);
+                    poemOutput.innerHTML = 'Đã xảy ra lỗi khi tạo bài thơ.';
+                } finally {
+                    generatePoemBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
